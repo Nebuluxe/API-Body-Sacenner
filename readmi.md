@@ -27,14 +27,14 @@ Instala todas las dependencias del proyecto ejecutando:
 
 bash
 
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
 Asegúrate de que el archivo requirements.txt incluya las siguientes dependencias:
 
-Flask
-tensorflow
-Pillow
-Werkzeug
+    Flask
+    tensorflow
+    Pillow
+    Werkzeug
 
 Paso 4: Verifica el modelo entrenado
 
@@ -43,9 +43,9 @@ Paso 5: Ejecutar la API
 
 Una vez que hayas configurado todo, puedes ejecutar la API:
 
-bash
-
-flask --app api_body_scanner run
+    bash
+    
+    flask --app api_body_scanner run
 
 Esto ejecutará la API en http://127.0.0.1:5000/.
 Uso de la API
@@ -59,20 +59,20 @@ Ejemplo de solicitud con Postman o cURL:
     Parámetro:
         image (archivo de imagen en formatos jpg, jpeg, o png)
 
-bash
-
-curl -X POST http://127.0.0.1:5000/predict \
-  -H 'Content-Type: multipart/form-data' \
-  -F 'image=@/ruta/a/tu/imagen.jpg'
+    bash
+    
+    curl -X POST http://127.0.0.1:5000/predict \
+      -H 'Content-Type: multipart/form-data' \
+      -F 'image=@/ruta/a/tu/imagen.jpg'
 
 Respuesta exitosa:
-
-json
-
-{
-  "altura_cm": 170.45,
-  "peso_kg": 65.12
-}
+    
+    json
+    
+    {
+      "altura_cm": 170.45,
+      "peso_kg": 65.12
+    }
 
 Errores comunes:
 
@@ -80,13 +80,13 @@ Errores comunes:
 
     json
 
-{
-  "error": "Invalid image format. Allowed formats are png, jpg, jpeg"
-}
+    {
+      "error": "Invalid image format. Allowed formats are png, jpg, jpeg"
+    }
 
-Imagen no válida:
-
-json
+    Imagen no válida:
+    
+    json
 
     {
       "error": "Invalid image file"
