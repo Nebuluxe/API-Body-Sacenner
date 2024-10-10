@@ -16,30 +16,31 @@ Esta API permite estimar la altura y el peso de una persona a partir de una imag
 
 Clona el repositorio desde GitHub:
 
-  bash
-  git clone https://github.com/Nebuluxe/API-Body-Sacenner.git
-  cd API-Body-Sacenner
+    bash
+    
+    git clone https://github.com/Nebuluxe/API-Body-Sacenner.git
+    cd API-Body-Sacenner
 
 
 Paso 2: Crear un entorno virtual
 
 Se recomienda crear un entorno virtual para manejar las dependencias. Entra en el directorio del proyecto y crea un entorno virtual.
 
-bash
-
-python -m venv venv
+    bash
+    
+    python -m venv venv
 
 Activa el entorno virtual:
 
-    En Windows:
+  En Windows:
 
     bash
 
-venv\Scripts\activate
+    venv\Scripts\activate
 
 En Linux o macOS:
-
-bash
+    
+    bash
 
     source venv/bin/activate
 
