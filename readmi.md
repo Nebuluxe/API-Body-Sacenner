@@ -1,3 +1,105 @@
+
+Paso 2: Crear un entorno virtual
+
+Se recomienda crear un entorno virtual para manejar las dependencias. Entra en el directorio del proyecto y crea un entorno virtual.
+
+bash
+
+python -m venv venv
+
+Activa el entorno virtual:
+
+    En Windows:
+
+    bash
+
+venv\Scripts\activate
+
+En Linux o macOS:
+
+bash
+
+    source venv/bin/activate
+
+Paso 3: Instalar dependencias
+
+Instala todas las dependencias del proyecto ejecutando:
+
+bash
+
+pip install -r requirements.txt
+
+Asegúrate de que el archivo requirements.txt incluya las siguientes dependencias:
+
+Flask
+tensorflow
+Pillow
+Werkzeug
+
+Paso 4: Verifica el modelo entrenado
+
+El archivo modelo_estima_altura_peso.keras debe estar en el directorio raíz del proyecto. Si aún no tienes este modelo, asegúrate de entrenarlo o conseguir una copia del modelo.
+Paso 5: Ejecutar la API
+
+Una vez que hayas configurado todo, puedes ejecutar la API:
+
+bash
+
+flask --app api_body_scanner run
+
+Esto ejecutará la API en http://127.0.0.1:5000/.
+Uso de la API
+Endpoint /predict
+
+Este endpoint espera una imagen enviada mediante una solicitud POST para realizar una predicción de la altura y el peso.
+Ejemplo de solicitud con Postman o cURL:
+
+    URL: http://127.0.0.1:5000/predict
+    Método: POST
+    Parámetro:
+        image (archivo de imagen en formatos jpg, jpeg, o png)
+
+bash
+
+curl -X POST http://127.0.0.1:5000/predict \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'image=@/ruta/a/tu/imagen.jpg'
+
+Respuesta exitosa:
+
+json
+
+{
+  "altura_cm": 170.45,
+  "peso_kg": 65.12
+}
+
+Errores comunes:
+
+    Formato de imagen no permitido:
+
+    json
+
+{
+  "error": "Invalid image format. Allowed formats are png, jpg, jpeg"
+}
+
+Imagen no válida:
+
+json
+
+    {
+      "error": "Invalid image file"
+    }
+
+Validación de imágenes
+
+La API valida que las imágenes tengan una resolución mínima de 800x1200 y un formato correcto (JPEG o PNG). Además, puedes agregar validaciones adicionales como comprobar si la imagen contiene a una persona o verificar la proporción de la imagen.
+Mejoras futuras
+
+    Validación de contenido de imagen: Integrar un modelo de detección de objetos para asegurarse de que la imagen contenga una persona antes de procesarla.
+    Interfaz gráfica: Crear una interfaz web para facilitar el uso de la API.
+
 Para que el modelo capture la altura de manera más precisa a partir de una foto, hay varios factores clave que deben considerarse en cuanto a la calidad y características de la imagen. Aquí te dejo una lista de requisitos que la foto debería cumplir para mejorar la precisión del modelo al estimar la altura:
 
 1. Posición del cuerpo:
