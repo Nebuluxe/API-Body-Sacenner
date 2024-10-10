@@ -99,7 +99,7 @@ Respuesta exitosa:
 
 Errores comunes:
 
-    Formato de imagen no permitido:
+Formato de imagen no permitido:
 
     json
 
@@ -107,7 +107,7 @@ Errores comunes:
       "error": "Invalid image format. Allowed formats are png, jpg, jpeg"
     }
 
-    Imagen no válida:
+Imagen no válida:
     
     json
 
