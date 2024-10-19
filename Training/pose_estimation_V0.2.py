@@ -7,7 +7,7 @@ from PIL import Image
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 # Cargar el CSV
-data = pd.read_csv(r'D:\\Output_data.csv')
+data = pd.read_csv(r'C:\\Python Projects\\Output_data.csv')
 
 # Función para convertir alturas en pies y pulgadas a centímetros
 def convert_height(height_str):
@@ -28,7 +28,7 @@ data['Height_cm'] = data['Height & Weight'].apply(lambda x: convert_height(x.spl
 data['Weight_kg'] = data['Height & Weight'].apply(lambda x: convert_weight(x.split()[2] + " " + x.split()[3]))
 
 # Asegurar que las rutas de las imágenes sean correctas
-data['Filepath'] = data['Filename'].apply(lambda x: os.path.join(r'D:\\TestImages', x))
+data['Filepath'] = data['Filename'].apply(lambda x: os.path.join(r'C:\\Python Projects\\TestImages', x))
 
 # Verificar si una imagen es válida
 def verify_image(filepath):
