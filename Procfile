@@ -1,1 +1,1 @@
-web: python api_body_scanner.py
+web: gunicorn api_body_scanner:app

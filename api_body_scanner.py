@@ -1,6 +1,6 @@
+import os
 from flask import Flask, request, jsonify
 import tensorflow as tf
-import os
 import tempfile
 from werkzeug.utils import secure_filename
 from PIL import Image
@@ -73,12 +73,6 @@ def predict():
             os.remove(image_path)
             return jsonify({'error': 'Invalid image file'}), 400
 
-        # Validar las propiedades de la imagen
-        # is_valid, validation_msg = validate_image_properties(image_path)
-        # if not is_valid:
-        #     os.remove(image_path)
-        #     return jsonify({'error': validation_msg}), 400
-
         # Preprocesar la imagen
         img_array = preprocess_image(image_path)
 
@@ -103,4 +97,6 @@ def predict():
 
 # Ejecutar la aplicación
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Verificar si estamos en Heroku o en local
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
