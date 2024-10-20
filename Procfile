@@ -1,1 +1,1 @@
-web: gunicorn --workers=1 --timeout 120 --preload api_body_scanner:app
+web: gunicorn api_body_scanner:app
