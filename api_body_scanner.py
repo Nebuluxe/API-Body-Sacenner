@@ -9,7 +9,7 @@ import numpy as np
 
 app = Flask(__name__)
 
-# Cargar el modelo de detección de personas desde TensorFlow Hub al inicio (esto está bien porque no es tan pesado como el modelo entrenado)
+# Cargar el modelo de detección de personas desde TensorFlow Hub (BodyPix)
 bodypix_model = hub.load("https://tfhub.dev/tensorflow/ssd_mobilenet_v2/2")
 
 # Función para preprocesar la imagen
@@ -119,7 +119,7 @@ def predict():
         # Preprocesar la imagen
         img_array = preprocess_image(image_path)
 
-        # Cargar el modelo de predicción de altura/peso en el momento de la predicción
+        # Cargar el modelo de predicción de altura/peso solo cuando sea necesario
         model_path = os.path.join(os.getcwd(), 'modelo_estima_altura_peso.keras')
         model = tf.keras.models.load_model(model_path)
 
