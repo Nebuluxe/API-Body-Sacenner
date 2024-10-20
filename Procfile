@@ -1,1 +1,1 @@
-web: gunicorn api_body_scanner:app
+web: gunicorn --timeout 120 api_body_scanner:app
