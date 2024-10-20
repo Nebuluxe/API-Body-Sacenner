@@ -1,14 +1,19 @@
 import os
 from flask import Flask, request, jsonify
 import tensorflow as tf
+import tensorflow_hub as hub  # Para cargar el modelo de detección de personas
 import tempfile
 from werkzeug.utils import secure_filename
 from PIL import Image
+import numpy as np
 
 app = Flask(__name__)
 
-# Cargar el modelo entrenado
+# Cargar el modelo entrenado para predicción de altura/peso
 model = tf.keras.models.load_model('modelo_estima_altura_peso.keras')
+
+# Cargar el modelo de detección de personas desde TensorFlow Hub
+bodypix_model = hub.load("https://tfhub.dev/tensorflow/ssd_mobilenet_v2/2")
 
 # Función para preprocesar la imagen
 def preprocess_image(image_path):
@@ -42,6 +47,42 @@ def validate_image_properties(image_path):
     except Exception as e:
         return False, str(e)
 
+# Función para detectar si la imagen contiene una persona completa (BodyPix)
+def detect_full_body(image_path):
+    # Abrir la imagen y redimensionar
+    img = Image.open(image_path)
+    img_resized = img.resize((320, 320))  # Redimensionar a 320x320 para el modelo
+    img_array = np.array(img_resized).astype(np.uint8)  # Convertir a uint8
+    img_array = img_array[np.newaxis, ...]  # Expandir dimensiones para batch
+
+    # Realizar predicción con BodyPix
+    bodypix_result = bodypix_model.signatures['serving_default'](tf.constant(img_array, dtype=tf.uint8))
+
+    # Extraer cajas de detección, clases y puntuaciones
+    detection_boxes = bodypix_result['detection_boxes'].numpy()  # Cajas de detección
+    detection_classes = bodypix_result['detection_classes'].numpy().astype(int)  # Clases detectadas
+    detection_scores = bodypix_result['detection_scores'].numpy()  # Confianza de cada detección
+
+    # Verificar que detection_boxes tenga 3 dimensiones (batch, detecciones, coordenadas)
+    if detection_boxes.ndim != 3 or detection_boxes.shape[2] != 4:
+        return False
+
+    # Iterar sobre las detecciones y verificar si alguna es una persona (clase 1)
+    for i in range(detection_boxes.shape[1]):  # Iterar sobre el número de detecciones
+        if detection_classes[0][i] == 1 and detection_scores[0][i] > 0.3:  # Clase 1 es "persona", confianza > 0.3
+            box = detection_boxes[0][i]  # Extraer la caja i-ésima
+            y_min, x_min, y_max, x_max = box  # Desempaquetar las coordenadas
+
+            # Calcular el área de la caja de detección en relación con el tamaño de la imagen original
+            box_height = y_max - y_min
+            box_width = x_max - x_min
+            box_area = box_width * box_height
+
+            # Evaluar si la caja de detección cubre más del 20% de la imagen
+            if box_area > 0.2:  # Si se detecta un área significativa
+                return True
+    return False
+
 # Ruta para hacer predicción
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -72,6 +113,11 @@ def predict():
         except (IOError, SyntaxError):
             os.remove(image_path)
             return jsonify({'error': 'Invalid image file'}), 400
+
+        # Detectar si la imagen contiene un cuerpo completo
+        if not detect_full_body(image_path):
+            os.remove(image_path)
+            return jsonify({'error': 'The image does not contain a full body of a person'}), 400
 
         # Preprocesar la imagen
         img_array = preprocess_image(image_path)
