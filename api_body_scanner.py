@@ -10,7 +10,8 @@ import numpy as np
 app = Flask(__name__)
 
 # Cargar el modelo entrenado para predicción de altura/peso
-model = tf.keras.models.load_model('modelo_estima_altura_peso.keras')
+model_path = os.path.join(os.getcwd(), 'modelo_estima_altura_peso.keras')
+model = tf.keras.models.load_model(model_path)
 
 # Cargar el modelo de detección de personas desde TensorFlow Hub
 bodypix_model = hub.load("https://tfhub.dev/tensorflow/ssd_mobilenet_v2/2")
